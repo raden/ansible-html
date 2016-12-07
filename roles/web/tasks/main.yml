@@ -1,0 +1,46 @@
+---
+# tasks file for web
+- name: adding a yum repository red hat 7.3
+  template: src=redhat7.repo.j2 dest=/etc/yum.repos.d/rhel-ftp.repo owner=root group=root mode=0644
+
+- name: install ntp
+  yum: name=ntp state=installed
+
+- name: looping method to install multiple packages
+  yum: name={{ item }} state=installed
+  with_items:
+   - libselinux-python
+   - libsemanage-python
+   - firewalld
+   - httpd
+   - php
+   - php-mysql
+
+- name: start the ntp service and enabled on boot
+  service: name=ntpd state=started enabled=yes
+
+- name: start http service and enabled on boot
+  service: name=httpd state=started enabled=yes
+
+- name: configure ntp file
+  template: src=ntp.conf.j2 dest=/etc/ntp.conf
+  notify: restart ntp
+
+- name: creates the index file
+  template: src=index.html.j2 dest=/var/www/html/index.html
+  tags: "index"
+  notify: restart httpd
+
+- name: picture
+  copy: src={{item.src}} dest={{item.dest}}
+  with_items:
+    - { src: 'bos.jpeg', dest: '/var/www/html/bos.jpeg' }
+    - { src: 'redhat2.jpeg', dest: '/var/www/html/redhat2.jpeg' }
+  tags: "picture"
+  notify: restart httpd
+
+- name: start firewalld
+  service: name=firewalld state=started enabled=yes
+
+- name: insert firewalld rule for httpd
+  firewalld: port={{ httpd_port }}/tcp permanent=true state=enabled immediate=yes

@@ -1,0 +1,8 @@
+httpd_port: 80
+ntpserver: 192.168.1.2
+text_top: <center><p><b><font size="5">Deploying a simple HTML page from Ansible playbook</font></p></center>
+#text_top: <center><p><b><font size="6">Let's build a smarter planet</font></p></center>
+picture: <center><img src="redhat2.jpeg" height="550" width="410"></center>
+#picture: <center><img src="bos.jpeg" height="550" width="320"></center>
+#text_below: <center><p><b><font size="6">SHEIKH MOHD ROZAIMI</font></p></center>
+text_below: <center><p><b><font size="4">IBM CIC MALAYSIA</font></p></center> 
